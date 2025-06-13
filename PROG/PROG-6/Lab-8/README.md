@@ -15,4 +15,4 @@
 + в папке images лежат примеры фотографий для тестирования модели.
 
 ### Скриншоты.
- ![alt text](images\result.png)
+ ![alt text](images/result.png)
