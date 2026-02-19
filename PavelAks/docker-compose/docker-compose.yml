@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  pong1:
+    build: .
+    environment:
+      - PORT=9001
+      - Hello_MESSAGE=Hello from service 1
+    ports:
+      - "9001:9001"
+
+  pong2:
+    build: .
+    environment:
+      - PORT=9002
+      - Hello_MESSAGE=Hello from service 2
+    ports:
+      - "9002:9002"
