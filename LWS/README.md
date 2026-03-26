@@ -392,3 +392,7 @@ stop
 ```
 
 
+### 2. UI.
+
++ код можно посмотреть тут [ссылка на репозиторий](https://github.com/Kvazistam/Fairytalegeneratorui)
++ Сам сайт можно посмотреть тут. [ссылка на сайт](https://dusk-galaxy-70917595.figma.site/)
