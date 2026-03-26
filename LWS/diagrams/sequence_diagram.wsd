@@ -1,0 +1,16 @@
+@startuml
+actor Пользователь
+participant FastAPI
+participant StoryService
+participant LLMService
+participant Database
+
+Пользователь -> FastAPI: POST /generate
+FastAPI -> StoryService: generate_story(params)
+StoryService -> LLMService: generate_text(prompt)
+LLMService --> StoryService: текст сказки
+StoryService -> Database: save_story()
+Database --> StoryService: OK
+StoryService --> FastAPI: готовая сказка
+FastAPI --> Пользователь: JSON ответ
+@enduml

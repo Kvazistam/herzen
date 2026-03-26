@@ -1,0 +1,47 @@
+@startuml
+class User {
+  +id: int
+  +username: str
+}
+
+class Story {
+  +id: int
+  +title: str
+  +content: str
+  +created_at: datetime
+}
+
+class Character {
+  +name: str
+  +role: str
+}
+
+class Template {
+  +id: int
+  +structure: str
+}
+
+class StoryService {
+  +generate_story()
+}
+
+class LLMService {
+  +generate_text(prompt: str): str
+}
+
+class Database {
+  +save_story(story: Story)
+  +get_user_stories(user_id: int)
+}
+
+class FastAPIController {
+  +create_story()
+  +get_stories()
+}
+
+FastAPIController --> StoryService
+StoryService --> LLMService
+StoryService --> Database
+Story --> Character
+StoryService --> Template
+@enduml

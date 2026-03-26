@@ -1,0 +1,30 @@
+@startuml
+
+state "Создан запрос" as Created : пользователь вводит параметры
+state "Формирование prompt" as Prompt : сбор структуры Кэмпбелла
+state "Генерация (LLM)" as Generating : вызов LLaMA
+state "Постобработка" as Post : очистка и форматирование текста
+state "Сохранена" as Saved : запись в PostgreSQL
+state "Ошибка" as Error : ошибка генерации
+state "Просмотр" as Viewed : пользователь читает результат
+
+[*] --> Created
+
+Created --> Prompt
+Prompt --> Generating
+
+Generating --> Post : успех
+Generating --> Error : ошибка модели
+
+Post --> Saved
+
+Saved --> Viewed : открыть
+
+Viewed --> Generating : перегенерация
+
+Error --> Generating : повтор
+Error --> [*]
+
+Viewed --> [*]
+
+@enduml
