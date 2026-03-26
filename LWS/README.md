@@ -60,7 +60,7 @@ StoryService --> Template
 
 out: 
 
-![use_cases](https://www.plantuml.com/plantuml/png/RL51QiCm4Bph5Jh6c7p0XvAIKYYaK4XxDbjxQGMIR7R7eQNqxyMs53TnBaBIpCxEpkuK91Y2DuqdLVkcBFR7M5kwjh8kOhmEoX8fS6KLOdvDuXxHoVUA30UVcDQMJHV14SjRcC1jJQXiIs2um8lY_fE46cGBIqzhI-dyjO5N3hqdyCg3GeO6WznqV6GvkIOLVN1a8N2j8xGf5kxXy7oR2Vx2ffSkzFDOnLMJ1mAzawOofLCMdyvgDb7CagZ7R2VSiMwcHvhZdvL7Kjo_FEsx2Ecyp_7CMPwT9y6iDTMlAxVRkuiOp4Kc8xeCliRoR3CoVPrtjcRd_PWTntO8_Wy0 "use_cases")
+![use_cases](https://www.plantuml.com/plantuml/png/ZOz12e9G54NdRnL_Q0Ct425kHTH1e0Qcyw_HJDg2j0CfFehbNyEzEmg56XKvV73kkU_wnoB8Yp9D90YBGwxGmkB11ZqiRkXOmyotY8ChxZ2OOAWnKBy1DeeLHdJeCVAqKQxhgPcsF5EZmuJX2xLLkzq-2vCoYZrF7BIpaHMUiAofOPOC1bQiOPVAoqgtoAyPd_og9VyqgruMFywYCarU "use_cases")
 
 
 #### 1.2 Диаграмма классов.
