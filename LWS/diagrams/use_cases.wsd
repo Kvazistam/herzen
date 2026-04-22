@@ -1,47 +1,24 @@
 @startuml
-class User {
-  +id: int
-  +username: str
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Пользователь" as User
+actor "Администратор" as Admin
+
+rectangle "Система генерации сказок" {
+  usecase "Сгенерировать сказку" as UC1
+  usecase "Просмотреть историю сказок" as UC2
+  usecase "Переписать/пересоздать сказку" as UC3
+  usecase "Управлять шаблонами" as UC4
+  usecase "Просмотреть статистику" as UC5
 }
 
-class Story {
-  +id: int
-  +title: str
-  +content: str
-  +created_at: datetime
-}
+User --> UC1
+User --> UC2
+User --> UC3
+Admin --> UC4
+Admin --> UC5
 
-class Character {
-  +name: str
-  +role: str
-}
-
-class Template {
-  +id: int
-  +structure: str
-}
-
-class StoryService {
-  +generate_story()
-}
-
-class LLMService {
-  +generate_text(prompt: str): str
-}
-
-class Database {
-  +save_story(story: Story)
-  +get_user_stories(user_id: int)
-}
-
-class FastAPIController {
-  +create_story()
-  +get_stories()
-}
-
-FastAPIController --> StoryService
-StoryService --> LLMService
-StoryService --> Database
-Story --> Character
-StoryService --> Template
+UC1 ..> UC2 : «include»
+UC3 ..> UC1 : «extend»
 @enduml

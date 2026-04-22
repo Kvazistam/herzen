@@ -1,16 +1,52 @@
 @startuml
-actor Пользователь
-participant FastAPI
-participant StoryService
-participant LLMService
-participant Database
+autonumber
+actor "Пользователь" as User
+participant "APIController" as API
+participant "StoryService" as Service
+participant "LLMService" as LLM
+participant "StoryRepository" as DB
 
-Пользователь -> FastAPI: POST /generate
-FastAPI -> StoryService: generate_story(params)
-StoryService -> LLMService: generate_text(prompt)
-LLMService --> StoryService: текст сказки
-StoryService -> Database: save_story()
-Database --> StoryService: OK
-StoryService --> FastAPI: готовая сказка
-FastAPI --> Пользователь: JSON ответ
+== Генерация сказки ==
+
+User -> API: POST /generate {params}
+activate API
+
+API -> Service: generate_story(params)
+activate Service
+
+Service -> Service: build_prompt(template, characters)
+
+Service -> LLM: generate_text(prompt)
+activate LLM
+LLM --> Service: StoryContent
+deactivate LLM
+
+Service -> DB: save(story: Story)
+activate DB
+DB --> Service: story_id: int
+deactivate DB
+
+Service --> API: Story
+deactivate Service
+
+API --> User: 201 Created {story: Story}
+deactivate API
+
+== Регенерация (опционально) ==
+
+User -> API: POST /regenerate/{id}
+API -> Service: regenerate_story(id)
+Service -> LLM: generate_text(new_prompt)
+LLM --> Service: updated_content
+Service -> DB: update(story)
+Service --> API: Story
+API --> User: 200 OK {story}
+
+== Обработка ошибки ==
+
+alt Ошибка генерации
+    LLM --> Service: error
+    Service --> API: ErrorResponse
+    API --> User: 500 Internal Error
+end
 @enduml

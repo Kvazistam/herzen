@@ -1,30 +1,35 @@
 @startuml
+skinparam state {
+  BackgroundColor White
+  BorderColor Black
+}
 
-state "Создан запрос" as Created : пользователь вводит параметры
-state "Формирование prompt" as Prompt : сбор структуры Кэмпбелла
-state "Генерация (LLM)" as Generating : вызов LLaMA
-state "Постобработка" as Post : очистка и форматирование текста
-state "Сохранена" as Saved : запись в PostgreSQL
-state "Ошибка" as Error : ошибка генерации
-state "Просмотр" as Viewed : пользователь читает результат
+[*] --> Created : старт
 
-[*] --> Created
+state "RequestCreated" as Created : Ввод параметров пользователем\nВалидация данных
+state "PromptBuilding" as Prompt : Загрузка StoryTemplate\nСборка структуры Кэмпбелла\nФормирование prompt
+state "LLMGeneration" as Generating : Вызов LLMService\nОжидание ответа модели
+state "PostProcessing" as Post : Очистка текста\nФорматирование вывода
+state "Persisted" as Saved : Запись в PostgreSQL\nИндексация для поиска
+state "Error" as Error : Логирование ошибки\nПодготовка сообщения пользователю
+state "Viewed" as Viewed : Отображение результата\nВозможность экспорта/регенерации
 
-Created --> Prompt
-Prompt --> Generating
+Created --> Prompt : данные валидны
+Created --> Error : ошибка валидации
 
-Generating --> Post : успех
-Generating --> Error : ошибка модели
+Prompt --> Generating : prompt готов
+Prompt --> Error : шаблон не найден
 
-Post --> Saved
+Generating --> Post : успех (200)
+Generating --> Error : таймаут / ошибка модели
 
-Saved --> Viewed : открыть
+Post --> Saved : обработка завершена
+Post --> Error : форматирование не удалось
 
-Viewed --> Generating : перегенерация
+Saved --> Viewed : готово к показу
+Viewed --> Generating : запрос на регенерацию
+Viewed --> [*] : сессия завершена
 
-Error --> Generating : повтор
-Error --> [*]
-
-Viewed --> [*]
-
+Error --> Generating : повтор (≤3)
+Error --> [*] : критическая ошибка
 @enduml

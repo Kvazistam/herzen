@@ -1,13 +1,19 @@
 @startuml
+skinparam classAttributeIconSize 0
 
-class Character {
-  +name: str
-  +role: str
+class User {
+  +id: int
+  +username: str
+  +email: str
+  +created_at: datetime
+  +get_stories(): List<Story>
 }
 
-class StoryTemplate {
-  +id: int
-  +structure: str
+class Admin {
+  +access_level: int
+  +add_template(template: StoryTemplate): bool
+  +remove_template(template_id: int): bool
+  +show_history(user_id): List<Story>
 }
 
 class Story {
@@ -15,34 +21,74 @@ class Story {
   +title: str
   +content: str
   +created_at: datetime
+  +user_id: int
+  +template_id: int
+  +add_character(c: Character): void
+  +get_content(): Str
+  +get_title(): Str
 }
 
-class User {
+class Character {
   +id: int
-  +username: str
+  +name: str
+  +role: str
+  +description: str
 }
 
-class Admin {
-  +access_level: int
-  +add_template(template: StoryTemplate)
-  +remove_template(template: StoryTemplate)
+class StoryTemplate {
+  +id: int
+  +name: str
+  +structure: str
+  +description: str
 }
 
 class StoryService {
-  +generate_story()
-  +build_prompt()
+  +generate_story(params: StoryParams): Story
+  +build_prompt(template: StoryTemplate, chars: List<Character>): str
+  +regenerate_story(story_id: int): Story
 }
 
 class LLMService {
-  +generate_text(prompt: str): str
+  +generate_text(prompt: str, model: str): str
+  +validate_response(text: str): bool
 }
 
-User --> Story
-Story --> Character
-StoryService --> Story
-StoryService --> StoryTemplate
+interface StoryRepository {
+  +save(story: Story): bool
+  +find_by_id(id: int): Story
+  +find_by_user(user_id: int): List<Story>
+  +delete(story_id: int): bool
+}
+
+class APIController {
+  +create_story(request: StoryRequest): Response
+  +get_stories(user_id: int): List[StoryDTO]
+  +regenerate_story(story_id: int): Response
+}
+
+
+' Наследование
+Admin --|> User : наследует
+
+' Связи сущностей
+Story "1" *-- "0..*" Character : содержит 
+Story ..> StoryTemplate : основана на 
+User "1" --> "0..*" Story : создал 
+
+' Сервисные зависимости
+APIController --> StoryService
+StoryService --> StoryRepository
 StoryService --> LLMService
+StoryService ..> StoryTemplate : использует 
 
-Admin --|> User
-
+' Примечания
+note right of StoryRepository: Реализация: PostgreSQL
+note right of LLMService: Провайдер: LLaMA / OpenAI
+note right of APIController
+  Реализация: FastAPI
+  Маршруты: 
+      POST /generate, 
+      GET /stories, 
+      POST /regenerate/{id}
+end note
 @enduml
